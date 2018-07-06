@@ -4,10 +4,10 @@ Converts doctest to code • https://doctest2code.herokuapp.com
 
 Sample input:
 
-```pydocstring
+```python
 >>> sum_ = 0
 >>> for number in range(5):
-...  sum_ += number
+...   sum_ += number
 >>> sum_
 10
 ```
