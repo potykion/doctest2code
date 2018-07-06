@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>doctest2code</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.2em;
+        }
+
+        .editor {
+            display: inline-block;
+            width: 48%;
+            height: 400px;
+        }
+
+        .nav {
+            padding: 16px;
+        }
+
+        .primary {
+            background: #67C190;
+            color: white;
+        }
+
+        .btn {
+            width: 160px;
+            height: 40px;
+            margin: 18px 0;
+            border: 0;
+            font-size: 1.2em;
+            padding: 0;
+        }
+
+        .code {
+            font-family: 'source-code-pro', monospace;
+        }
+
+        .keyword {
+            color: blue;
+        }
+
+        .operator {
+            color: rgb(104, 118, 135);
+        }
+
+        .snippet {
+            background-color: #eaeaea;
+            padding: 2px;
+        }
+
+        .container {
+            margin: auto 20px;
+            text-align: center
+        }
+
+        .editorContainer {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .btnContainer {
+            display: flex;
+            justify-content: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="code primary nav">
+    doctest -> code
+</div>
+
+<div class="container">
+
+    <p>
+        Removes <span class="code snippet operator">>>></span> and <span class="code snippet">...</span> •
+        Appends <span class="code snippet keyword">assert</span> statements
+    </p>
+
+    <form id="doctestForm" method="post">
+
+        <div class="editorContainer">
+            <textarea hidden name="doctest"></textarea>
+            <div class="editor" id="doctest">{% if doctest %}{{ doctest }}{% endif %}</div>
+            <div class="editor" id="code">{% if code %}{{ code }}{% endif %}</div>
+        </div>
+
+        <div class="btnContainer">
+            <button id="clean" class="snippet code btn">
+                clean
+            </button>
+
+            <button id="submit" class="primary code btn" type="submit">
+                convert
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+</div>
+
+{# jQuery #}
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+{# Ace #}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/ace.js"></script>
+{# Cookies #}
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+
+<script>
+    function setupEditor(editorId, editable) {
+        var editor = ace.edit(editorId);
+        editor.setTheme("ace/theme/textmate");
+        editor.session.setMode("ace/mode/python");
+
+        editor.setFontSize("14pt");
+
+        editor.setAutoScrollEditorIntoView(true);
+
+        editor.renderer.setShowGutter(false);
+        editor.setHighlightActiveLine(false);
+        editor.setShowPrintMargin(false);
+
+
+        editor.setReadOnly(!editable);
+
+        if (!editable) {
+            editor.renderer.$cursorLayer.element.style.display = "none";
+        }
+
+        document.getElementById(editorId).style.background = "#EAEAEA";
+
+        return editor;
+    }
+
+    var doctestEditor = setupEditor("doctest", true);
+    var codeEditor = setupEditor("code", false);
+
+    $("#submit").click(function (e) {
+        $("textarea[name='doctest']").val(doctestEditor.getSession().getValue());
+    });
+
+    $("#clean").click(function (e) {
+        e.preventDefault();
+        doctestEditor.setValue("");
+        codeEditor.setValue("");
+        Cookies.remove("doctest");
+        Cookies.remove("code");
+    })
+</script>
+
+</body>
+</html>
