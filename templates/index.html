@@ -122,23 +122,24 @@
 <script>
     function setupEditor(editorId, editable) {
         var editor = ace.edit(editorId);
+
+        {# editor options #}
         editor.setTheme("ace/theme/textmate");
-        editor.session.setMode("ace/mode/python");
-
         editor.setFontSize("14pt");
-
         editor.setAutoScrollEditorIntoView(true);
-
-        editor.renderer.setShowGutter(false);
         editor.setHighlightActiveLine(false);
         editor.setShowPrintMargin(false);
-
-
         editor.setReadOnly(!editable);
 
+        {# renderer options #}
+        editor.renderer.setShowGutter(false);
         if (!editable) {
             editor.renderer.$cursorLayer.element.style.display = "none";
         }
+
+        {# session options #}
+        editor.session.setMode("ace/mode/python");
+        editor.session.setNewLineMode("windows");
 
         document.getElementById(editorId).style.background = "#EAEAEA";
 
